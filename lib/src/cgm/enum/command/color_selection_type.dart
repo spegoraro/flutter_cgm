@@ -1,0 +1,4 @@
+enum ColorSelectionType {
+  indexed,
+  direct,
+}
