@@ -1,16 +1,27 @@
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui';
+import 'package:flutter_cgm/src/cgm/extension.dart';
 import 'package:vector_math/vector_math.dart';
 
 import 'package:flutter_cgm/src/cgm/cgm.dart';
+
+double angle(double x, double y) {
+  return normalizeAngle(atan2(y, x));
+}
+
+double normalizeAngle(double angle) {
+  if (angle < 0) {
+    return angle + 2.0 * pi;
+  }
+
+  return angle;
+}
 
 class EllipticalArc extends Ellipse {
   late final double startVectorDeltaX;
   late final double startVectorDeltaY;
   late final double endVectorDeltaX;
   late final double endVectorDeltaY;
-  Path? path;
 
   EllipticalArc(super.ec, super.eid, super.l, super.buffer, super.cgm) {
     startVectorDeltaX = makeVdc();
@@ -19,86 +30,54 @@ class EllipticalArc extends Ellipse {
     endVectorDeltaY = makeVdc();
   }
 
-  double angle(double x, double y) {
-    return normalizeAngle(atan2(y, x));
-  }
+  @override
+  void applyArcs(CGMDisplay display, Matrix4 transform) {
+    final startVector = transform.transform3(Vector3(startVectorDeltaX, startVectorDeltaY, 0)).xy;
+    final endVector = transform.transform3(Vector3(endVectorDeltaX, endVectorDeltaY, 0)).xy;
 
-  double normalizeAngle(double angle) {
-    if (angle < 0) {
-      return angle + 2 * pi;
-    }
+    final double firstConjugateAngle =
+        angle(firstConjugateDiameterEndPoint.x - center.x, firstConjugateDiameterEndPoint.y - center.y);
+    final double secondConjugateAngle =
+        angle(secondConjugateDiameterEndPoint.x - center.x, secondConjugateDiameterEndPoint.y - center.y);
 
-    return angle;
-  }
+    Vector2 finalStartVector = startVector;
+    Vector2 finalEndVector = endVector;
 
-  void _initializePath() {
-    bool clockwise = true;
-
-    double firstConjugateAngle = angle(
-      firstConjugateDiameterEndPoint.y - center.y,
-      firstConjugateDiameterEndPoint.x - center.x,
-    );
-    double secondConjugateAngle = angle(
-      secondConjugateDiameterEndPoint.y - center.y,
-      secondConjugateDiameterEndPoint.x - center.x,
-    );
-
+    bool clockwise = false;
     if (firstConjugateAngle > secondConjugateAngle) {
       if (firstConjugateAngle - secondConjugateAngle < pi) {
-        clockwise = true;
+        finalStartVector = startVector;
+        finalEndVector = endVector;
       } else {
-        clockwise = false;
+        finalStartVector = endVector;
+        finalEndVector = startVector;
+        clockwise = true;
       }
     } else {
       if (secondConjugateAngle - firstConjugateAngle < pi) {
-        clockwise = false;
+        finalStartVector = endVector;
+        finalEndVector = startVector;
       } else {
+        finalStartVector = startVector;
+        finalEndVector = endVector;
         clockwise = true;
       }
     }
 
-    var centerSecondDistance = center.distanceTo(secondConjugateDiameterEndPoint);
-
-    firstConjugateAngle = atan2(
-      firstConjugateDiameterEndPoint.y - center.y,
-      firstConjugateDiameterEndPoint.x - center.x,
-    );
-
-    final secondFirstConjugateAngle = atan2(
-          secondConjugateDiameterEndPoint.y - center.y,
-          secondConjugateDiameterEndPoint.x - center.x,
-        ) -
-        firstConjugateAngle;
-
-    centerSecondDistance = sin(secondFirstConjugateAngle).abs() * centerSecondDistance;
-
-    path = Path();
-    path!.moveTo(
-      center.x + startVectorDeltaX,
-      center.y + startVectorDeltaY,
-    );
-    path!.arcToPoint(
-      Offset(
-        center.x + endVectorDeltaX,
-        center.y + endVectorDeltaY,
-      ),
-      radius: Radius.elliptical(
-        centerSecondDistance * 2.0,
-        centerSecondDistance * 2.0,
-      ),
-      largeArc: false,
-      clockwise: clockwise,
-    );
+    shape = Path() //.transform(Float64List.fromList(transform.storage))
+      ..moveTo(finalStartVector.x, finalStartVector.y)
+      ..arcToPoint(
+        finalEndVector.toOffset(),
+        radius: shape!.getBounds().size.toEllipseRadius(),
+        clockwise: clockwise,
+      );
   }
 
   @override
   void paint(CGMDisplay display) {
-    if (path == null) _initializePath();
+    initializeShape(display);
 
-    final Canvas canvas = display.canvas;
-    final Paint paint = display.linePaint!;
-
-    canvas.drawPath(path!, paint);
+    display.canvas.drawPath(shape!, display.linePaint!);
   }
 
   @override

@@ -9,7 +9,7 @@ class CharacterHeight extends Command {
 
   @override
   void paint(CGMDisplay display) {
-    // TODO: implement paint
+    display.characterHeight = characterHeight;
   }
 
   @override

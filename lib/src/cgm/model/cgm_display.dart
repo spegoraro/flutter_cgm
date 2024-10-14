@@ -27,7 +27,7 @@ class CGMDisplay {
   bool _isFilled = false;
   bool _drawEdge = false;
 
-  double _characterHeight = 32;
+  double characterHeight = 32;
 
   late List<Point<double>> _extent;
 
@@ -43,7 +43,7 @@ class CGMDisplay {
 
   bool _beforeBeginPicture = true;
 
-  double _additionalCharacterSpace = 0;
+  double additionalCharacterSpace = 0;
   bool _isScaled = false;
 
   Point<double> _upVector = const Point(0, 0), _baseVector = const Point(0, 0);
@@ -199,8 +199,8 @@ class CGMDisplay {
 
     _clipFlag = true;
 
-    _characterHeight = 32;
-    _additionalCharacterSpace = 0;
+    characterHeight = 32;
+    additionalCharacterSpace = 0;
 
     _lineWidth = 1;
     _edgeWidth = 1;
@@ -279,8 +279,10 @@ class CGMDisplay {
   bool get clipFlag => _clipFlag;
   bool get isScaled => _isScaled;
 
-  double get characterHeight => _characterHeight;
-  double get additionalCharacterSpace => _additionalCharacterSpace;
+  HorizontalAlignment get horizontalTextAlignment => _horizontalTextAlignment;
+  VerticalAlignment get verticalTextAlignment => _verticalTextAlignment;
+  double get continuousHorizontalAlignment => _continuousHorizontalAlignment;
+  double get continuousVerticalAlignment => _continuousVerticalAlignment;
 
   BeginFigure? currentFigure;
   List<PolyBezier> currentPolyBezier = [];
@@ -293,6 +295,17 @@ class CGMDisplay {
   void setInteriorStyle(InteriorStyleStyle style) {
     _interiorStyle = style;
     _isFilled = style == InteriorStyleStyle.solid || style == InteriorStyleStyle.interpolated;
+  }
+
+  void setTextAlignment(
+      {required HorizontalAlignment horizontal,
+      required VerticalAlignment vertical,
+      required double continuousHorizontal,
+      required double continuousVertical}) {
+    _horizontalTextAlignment = horizontal;
+    _verticalTextAlignment = vertical;
+    _continuousHorizontalAlignment = continuousHorizontal;
+    _continuousVerticalAlignment = continuousVertical;
   }
 
   void setFlag({bool? filled, bool? drawEdge, bool? transparent, bool? clip}) {

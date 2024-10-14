@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (cgm == null) {
-            final file = File('assets/Engin.cgm');
+            final file = File('assets/img9215.cgm');
             cgm = CGM(file);
           }
           for (final command in cgm!.commands) {
@@ -70,7 +70,7 @@ class _HomeState extends State<Home> {
           maxScale: 10,
           child: Builder(builder: (context) {
             if (cgm == null) {
-              final file = File('assets/Engin.cgm');
+              final file = File('assets/img9215.cgm');
               cgm = CGM(file);
             }
 

@@ -412,8 +412,7 @@ class Command {
       // TODO: return Polymarker(elementClass, elementId, l, buffer, cgm);
 
       case GraphicalPrimitiveElement.text:
-        return _unipmlemented(buffer, elementClass, elementId, l, cgm);
-      // TODO: return Text(elementClass, elementId, l, buffer, cgm);
+        return Text(elementClass, elementId, l, buffer, cgm);
 
       case GraphicalPrimitiveElement.restrictedText:
         return _unipmlemented(buffer, elementClass, elementId, l, cgm);

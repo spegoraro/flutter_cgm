@@ -37,7 +37,12 @@ class TextAlignment extends Command {
 
   @override
   void paint(CGMDisplay display) {
-    // TODO: implement paint
+    display.setTextAlignment(
+      vertical: verticalAlignment,
+      horizontal: horizontalAlignment,
+      continuousVertical: continuousVerticalAlignment,
+      continuousHorizontal: continuousHorizontalAlignment,
+    );
   }
 
   @override

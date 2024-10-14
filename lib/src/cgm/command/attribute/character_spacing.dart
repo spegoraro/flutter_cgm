@@ -9,7 +9,7 @@ class CharacterSpacing extends Command {
 
   @override
   void paint(CGMDisplay display) {
-    // TODO: implement paint
+    display.additionalCharacterSpace = _additionalCharacterSpacing;
   }
 
   @override
