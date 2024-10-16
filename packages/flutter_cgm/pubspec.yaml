@@ -1,6 +1,6 @@
 name: flutter_cgm
 description: "Library for displaying CGM files in Flutter"
-version: 0.0.1
+version: 0.0.2
 homepage:
 repository: https://github.com/insufficientFunding/flutter_cgm
 
