@@ -1,0 +1,21 @@
+name: cgm
+description: "A dart library for parsing and displaying CGM (Computer Graphics Metafile) files"
+version: 0.0.1
+repository: https://github.com/insufficientFunding/flutter_cgm
+
+environment:
+  sdk: ^3.5.3
+
+# Add regular dependencies here.
+dependencies:
+  vector_math: ^2.1.4
+  collection: ^1.18.0
+  equatable: ^2.0.5
+  buffer: ^1.2.3
+  logging: ^1.2.0
+  meta: ^1.15.0
+  # path: ^1.8.0
+
+dev_dependencies:
+  lints: ^4.0.0
+  test: ^1.24.0
