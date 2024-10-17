@@ -4,7 +4,7 @@ import 'package:cgm/src/render/color.dart';
 /// Wrapper for Flutter's [Paint] class.
 class CGMPaint {
   /// The color of the paint.
-  Color color = Color(0xFF000000);
+  Color color = Color(0xFFFF0000);
 
   /// The width of the stroke.
   /// Default is 0.0, which results in hairline width.
@@ -20,10 +20,21 @@ class CGMPaint {
   bool filled = true;
 
   /// Creates a new [CGMPaint] object.
-  CGMPaint({Color? color, double? strokeWidth, StrokeCap? strokeCap, StrokeJoin? strokeJoin}) {
+  CGMPaint({Color? color, double? strokeWidth, StrokeCap? strokeCap, StrokeJoin? strokeJoin, bool? filled}) {
     if (color != null) this.color = color;
     if (strokeWidth != null) this.strokeWidth = strokeWidth;
     if (strokeCap != null) this.strokeCap = strokeCap;
     if (strokeJoin != null) this.strokeJoin = strokeJoin;
+    if (filled != null) this.filled = filled;
+  }
+
+  factory CGMPaint.from(CGMPaint other) {
+    return CGMPaint(
+      color: other.color,
+      strokeWidth: other.strokeWidth,
+      strokeCap: other.strokeCap,
+      strokeJoin: other.strokeJoin,
+      filled: other.filled,
+    );
   }
 }

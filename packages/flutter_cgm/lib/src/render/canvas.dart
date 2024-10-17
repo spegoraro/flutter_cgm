@@ -13,18 +13,17 @@ class FlutterCGMCanvas extends CGMCanvas {
   FlutterCGMCanvas(this.canvas);
 
   @override
-  void clipPath(CGMPath path) => canvas.clipPath((path as FlutterCGMPath).rawPath);
+  void clipPath(CGMPath path) => canvas.clipPath((path as FlutterCGMPath).getPath());
 
   @override
-  CGMPath createPath([CGMPath? copyFrom]) =>
-      FlutterCGMPath(copyFrom != null ? (copyFrom as FlutterCGMPath).path : Path());
+  CGMPath createPath([CGMPath? copyFrom]) => FlutterCGMPath((copyFrom as FlutterCGMPath?)?.getPath());
 
   @override
   void drawCircle(Vector2 center, double radius, CGMPaint paint) =>
       canvas.drawCircle(Offset(center.x, center.y), radius, paint.toPaint());
 
   @override
-  void drawPath(CGMPath path, CGMPaint paint) => canvas.drawPath((path as FlutterCGMPath).rawPath, paint.toPaint());
+  void drawPath(CGMPath path, CGMPaint paint) => canvas.drawPath((path as FlutterCGMPath).getPath(), paint.toPaint());
 
   @override
   void drawRect(Vector2 position, Vector2 size, CGMPaint paint) =>
@@ -33,8 +32,8 @@ class FlutterCGMCanvas extends CGMCanvas {
   @override
   void drawText(String text, {required Vector2 offset, color.Color color = const color.Color(0xFF000000)}) {
     final builder = ParagraphBuilder(ParagraphStyle());
-    builder.addText(text);
     builder.pushStyle(TextStyle(color: Color(color.value)));
+    builder.addText(text);
 
     final paragraph = builder.build();
     paragraph.layout(const ParagraphConstraints(width: double.infinity));

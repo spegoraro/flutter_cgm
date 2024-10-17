@@ -7,13 +7,13 @@ import 'package:vector_math/vector_math.dart';
 class FlutterCGMPath extends CGMPath {
   final Path path;
 
-  FlutterCGMPath(this.path);
+  FlutterCGMPath([Path? copyFrom]) : path = copyFrom ?? Path();
 
-  Path get rawPath => path;
+  Path getPath() => path;
 
   @override
   void addOval({required Vector2 center, required Vector2 radii}) =>
-      path.addOval(Rect.fromCircle(center: Offset(center.x, center.y), radius: radii.x));
+      path.addOval(Rect.fromLTWH(center.x, center.y, radii.x, radii.y));
 
   @override
   void addPath(CGMPath path, {required bool connect}) =>
@@ -25,7 +25,7 @@ class FlutterCGMPath extends CGMPath {
 
   @override
   void arcToPoint(Vector2 point,
-          {Vector2? radius, double rotation = 0.0, bool largeArc = false, bool clockwise = false}) =>
+          {Vector2? radius, double rotation = 0.0, bool largeArc = false, bool clockwise = true}) =>
       path.arcToPoint(
         Offset(point.x, point.y),
         radius: radius != null ? Radius.elliptical(radius.x, radius.y) : const Radius.circular(1),
@@ -42,9 +42,8 @@ class FlutterCGMPath extends CGMPath {
       path.cubicTo(x1, y1, x2, y2, x3, y3);
 
   @override
-  void extendWithPath(CGMPath path, [Vector2? offset]) => this
-      .path
-      .addPath((path as FlutterCGMPath).path, Offset(offset?.x ?? 0, offset?.y ?? 0), matrix4: Float64List(16));
+  void extendWithPath(CGMPath path, [Vector2? offset]) =>
+      this.path.addPath((path as FlutterCGMPath).path, Offset(offset?.x ?? 0, offset?.y ?? 0));
 
   @override
   Vector2 getBounds() {

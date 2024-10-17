@@ -22,7 +22,7 @@ abstract class CGMPath {
   /// Draws a cubic bezier curve to the given coordinates.
   void cubicTo(double x1, double y1, double x2, double y2, double x3, double y3);
 
-  /// Adds a quadratic bezier curve to the path.
+  /// Adds an oval to the current path.
   void addOval({required Vector2 center, required Vector2 radii});
 
   /// Adds a path to the current path.

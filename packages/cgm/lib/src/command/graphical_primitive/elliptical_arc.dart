@@ -67,7 +67,7 @@ class EllipticalArc extends Ellipse {
       ..moveTo(finalStartVector.x, finalStartVector.y)
       ..arcToPoint(
         finalEndVector,
-        radius: shape!.getBounds(),
+        radius: shape!.getBounds() / 2,
         clockwise: clockwise,
       );
   }

@@ -42,26 +42,44 @@ class CGMWidget extends StatelessWidget {
   /// The width of the renndered [CGM],
   /// if null, the width will be the largest width that fits
   /// the [CGMWidget.height] while maintaining the aspect ratio.
-  late final double? width;
+  final double? width;
 
   /// The height of the rendered [CGM],
   /// if null, the height will be the largest height that fits
   /// the [CGMWidget.width] while maintaining the aspect ratio.
   final double? height;
 
+  /// {@template CGMWidget.rasterize}
+  /// Whether or not to rasterize the [CGM] before rendering.
+  /// {@endtemplate}
+  final bool rasterize;
+
+  /// {@template CGMWidget.colorFilter}
+  /// The color to apply with [CGMWidget.blendMode] to the rendered [CGM].
+  /// {@endtemplate}
+  final ui.Color? color;
+
+  /// {@template CGMWidget.blendMode}
+  /// The blend mode to apply to the rendered [CGM].
+  /// {@endtemplate}
+  final BlendMode? blendMode;
+
   /// Creates a new [CGMWidget] to display the given [CGM].
-  CGMWidget({
+  const CGMWidget({
     super.key,
     required this.cgm,
     this.scale = 1,
     this.width,
     this.height,
-  }) {
-    if (width == null && height == null) width = 300;
-  }
+    this.rasterize = true,
+    this.color,
+    this.blendMode,
+  });
 
   @override
   Widget build(BuildContext context) {
+    assert(width != null || height != null, 'Width and height cannot both be null');
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final size = cgm.getSize();
@@ -88,7 +106,10 @@ class CGMWidget extends StatelessWidget {
           child: RawCGMWidget(
             cgm: cgm,
             scale: 1 / scale,
+            rasterize: rasterize,
             size: Size(x, y),
+            color: color,
+            blendMode: blendMode,
           ),
         );
       },
@@ -106,12 +127,33 @@ class RawCGMWidget extends SingleChildRenderObjectWidget {
   /// The size of the rendered [CGM].
   final Size size;
 
+  /// {@macro CGMWidget.rasterize}
+  final bool rasterize;
+
+  /// The color to apply with [CGMWidget.blendMode] to the rendered [CGM].
+  final ui.Color? color;
+
+  /// The blend mode to apply to the rendered [CGM].
+  final BlendMode? blendMode;
+
   /// Creates a new [RawCGMWidget] to display the given [CGM].
-  const RawCGMWidget({required this.cgm, super.key, required this.scale, required this.size});
+  const RawCGMWidget({
+    required this.cgm,
+    super.key,
+    required this.scale,
+    required this.size,
+    this.rasterize = true,
+    this.color,
+    this.blendMode,
+  });
 
   @override
   void updateRenderObject(BuildContext context, covariant RenderObject renderObject) {
-    (renderObject as RenderCGM).scale = scale;
+    (renderObject as RenderCGM)
+      ..scale = scale
+      ..color = color
+      ..blendMode = blendMode
+      ..rasterize = rasterize;
   }
 
   @override
@@ -124,6 +166,9 @@ class RawCGMWidget extends SingleChildRenderObjectWidget {
       opacity: null,
       pictureInfo: pictureInfo,
       devicePixelRatio: MediaQuery.of(context).devicePixelRatio,
+      rasterize: rasterize,
+      color: color,
+      blendMode: blendMode,
     );
   }
 }

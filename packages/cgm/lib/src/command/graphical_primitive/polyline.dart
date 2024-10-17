@@ -6,24 +6,23 @@ class Polyline extends Command {
   CGMPath? path;
   late List<Vector2> points;
 
-  Polyline(super.ec, super.eid, super.l, super.buffer, super.cgm);
+  Polyline(super.ec, super.eid, super.l, super.buffer, super.cgm) {
+    final n = arguments.length ~/ sizeOfPoint();
+
+    points = List<Vector2>.generate(n, (index) => makePoint());
+  }
 
   void _initializeShape(CGMDisplay display) {
     if (path != null) return;
 
-    final n = arguments.length ~/ sizeOfPoint();
-
     path = display.canvas.createPath();
-    points = List<Vector2>.generate(n, (index) {
-      final point = makePoint();
-      if (index == 0) {
-        path!.moveTo(point.x, point.y);
-      } else {
-        path!.lineTo(point.x, point.y);
-      }
+    final first = points.first;
+    path!.moveTo(first.x, first.y);
 
-      return point;
-    });
+    for (var i = 1; i < points.length; i++) {
+      final point = points[i];
+      path!.lineTo(point.x, point.y);
+    }
   }
 
   @override

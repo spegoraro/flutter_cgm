@@ -6,3 +6,5 @@ library flutter_cgm;
 
 export 'src/render/render.dart';
 export 'src/cgm_widget.dart';
+
+export 'package:cgm/cgm.dart' show CGM;

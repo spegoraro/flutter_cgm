@@ -1,3 +1,4 @@
+import 'package:cgm/color.dart';
 import 'package:vector_math/vector_math.dart';
 
 import 'package:cgm/cgm.dart';
@@ -61,26 +62,26 @@ class PolyBezier extends Command {
   void _initPath(CGMDisplay display) {
     path = display.canvas.createPath();
 
-    final paths = <CGMPath>[];
+    // final paths = <CGMPath>[];
 
     for (int i = 0; i < p1.length; i++) {
-      final subPath = display.canvas.createPath();
+      // final subPath = display.canvas.createPath();
       if (i == 0) {
-        // path!.moveTo(p1[i].x, p1[i].y);
+        path!.moveTo(p1[i].x, p1[i].y);
       }
-      subPath.moveTo(p1[i].x, p1[i].y);
-      subPath.cubicTo(p2[i].x, p2[i].y, p3[i].x, p3[i].y, p4[i].x, p4[i].y);
+      // subPath.moveTo(p1[i].x, p1[i].y);
+      // subPath.cubicTo(p2[i].x, p2[i].y, p3[i].x, p3[i].y, p4[i].x, p4[i].y);
 
-      // path!.cubicTo(p2[i].x, p2[i].y, p3[i].x, p3[i].y, p4[i].x, p4[i].y);
+      path!.cubicTo(p2[i].x, p2[i].y, p3[i].x, p3[i].y, p4[i].x, p4[i].y);
 
       // if (i == p1.length - 1) path!.close();
 
-      paths.add(subPath);
+      // paths.add(subPath);
     }
 
-    for (final p in paths) {
-      path!.extendWithPath(p);
-    }
+    // for (final p in paths) {
+    //   path!.extendWithPath(p);
+    // }
   }
 
   getSeed() {

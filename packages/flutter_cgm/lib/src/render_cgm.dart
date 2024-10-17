@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:cgm/cgm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_cgm/flutter_cgm.dart';
 import 'package:flutter_cgm/src/cgm_widget.dart';
 import 'package:flutter_cgm/src/raster.dart';
 
@@ -14,11 +15,17 @@ class RenderCGM extends RenderBox {
     required double devicePixelRatio,
     required Animation<double>? opacity,
     required double scale,
+    required bool rasterize,
+    Color? color,
+    BlendMode? blendMode,
   })  : _cgm = cgm,
         _pictureInfo = pictureInfo,
         _assetKey = assetKey,
         _devicePixelRatio = devicePixelRatio,
         _opacity = opacity,
+        _color = color,
+        _blendMode = blendMode,
+        _rasterize = rasterize,
         _scale = scale {
     _opacity?.addListener(_updateOpacity);
     _updateOpacity();
@@ -26,6 +33,18 @@ class RenderCGM extends RenderBox {
 
   static final Map<RasterKey, RasterData> _liveRasterCache = {};
 
+  /// Whether to rasterize the [CGM] before rendering.
+  /// This is useful for performance, at the cost of scalability.
+  bool get rasterize => _rasterize;
+  bool _rasterize;
+  set rasterize(bool value) {
+    if (_rasterize == value) return;
+
+    _rasterize = value;
+    markNeedsPaint();
+  }
+
+  /// The [CGM] to render.
   CGM get cgm => _cgm;
   CGM _cgm;
   set cgm(CGM value) {
@@ -35,6 +54,7 @@ class RenderCGM extends RenderBox {
     markNeedsPaint();
   }
 
+  /// The key of the asset that the [CGM] was loaded from.
   Object get assetKey => _assetKey;
   Object _assetKey;
   set assetKey(Object value) {
@@ -43,6 +63,7 @@ class RenderCGM extends RenderBox {
     _assetKey = value;
   }
 
+  /// The [PictureInfo] to render.
   PictureInfo get pictureInfo => _pictureInfo;
   PictureInfo _pictureInfo;
   set pictureInfo(PictureInfo value) {
@@ -52,6 +73,7 @@ class RenderCGM extends RenderBox {
     markNeedsPaint();
   }
 
+  /// The device pixel ratio of the screen.
   double get devicePixelRatio => _devicePixelRatio;
   double _devicePixelRatio;
   set devicePixelRatio(double value) {
@@ -63,6 +85,7 @@ class RenderCGM extends RenderBox {
 
   double _opacityValue = 1.0;
 
+  /// The opacity animation to apply to the [CGM].
   Animation<double>? get opacity => _opacity;
   Animation<double>? _opacity;
   set opacity(Animation<double>? value) {
@@ -84,6 +107,8 @@ class RenderCGM extends RenderBox {
     markNeedsPaint();
   }
 
+  /// The scale to apply to the [CGM] raster.
+  /// Ignored if [rasterize] is ***false***.
   double get scale => _scale;
   double _scale;
   set scale(double value) {
@@ -91,6 +116,26 @@ class RenderCGM extends RenderBox {
     if (_scale == value) return;
 
     _scale = value;
+    markNeedsPaint();
+  }
+
+  /// The color to apply to the [CGM].
+  Color? get color => _color;
+  Color? _color;
+  set color(Color? value) {
+    if (_color == value) return;
+
+    _color = value;
+    markNeedsPaint();
+  }
+
+  /// The blend mode to apply to the [CGM].
+  BlendMode? get blendMode => _blendMode;
+  BlendMode? _blendMode;
+  set blendMode(BlendMode? value) {
+    if (_blendMode == value) return;
+
+    _blendMode = value;
     markNeedsPaint();
   }
 
@@ -188,20 +233,38 @@ class RenderCGM extends RenderBox {
 
   @override
   void paint(PaintingContext context, ui.Offset offset) {
-    // assert(size == pictureInfo.size,
-    //     'The size of the picture (${pictureInfo.size})must match the size of the render object ($size)');
+    if (!rasterize) {
+      final canvas = FlutterCGMCanvas(context.canvas);
+      canvas.translate(offset.dx, offset.dy);
+      final cgmDisplay = CGMDisplay(cgm);
 
-    _maybeUpdateRaster();
-    final ui.Image image = _rasterData!.image;
-    final int width = _rasterData!.key.width;
-    final int height = _rasterData!.key.height;
+      cgmDisplay.scale(pictureInfo.size.width, pictureInfo.size.height);
+      cgmDisplay.paint(canvas);
+      final paint = Paint();
 
-    final ui.Rect src = ui.Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble());
+      paint.color = const Color.fromRGBO(0, 0, 0, 0);
+      if (blendMode != null) paint.blendMode = blendMode!;
+      if (color != null) paint.color = color!;
 
-    final ui.Rect dst = ui.Rect.fromLTWH(offset.dx, offset.dy, pictureInfo.size.width, pictureInfo.size.height);
+      canvas.canvas.drawPaint(paint);
+      // context.canvas.drawColor(Colors.blue, BlendMode.colorBurn);
+    } else {
+      _maybeUpdateRaster();
+      final ui.Image image = _rasterData!.image;
+      final int width = _rasterData!.key.width;
+      final int height = _rasterData!.key.height;
 
-    final paint = Paint()..color = const Color(0xFFFFFFFF).withOpacity(_opacityValue);
+      final ui.Rect src = ui.Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble());
 
-    context.canvas.drawImageRect(image, src, dst, paint);
+      final ui.Rect dst = ui.Rect.fromLTWH(offset.dx, offset.dy, pictureInfo.size.width, pictureInfo.size.height);
+
+      final paint = Paint();
+      paint.filterQuality = FilterQuality.low;
+      paint.color = color ?? const Color.fromRGBO(0, 0, 0, 0);
+      if (blendMode != null) paint.colorFilter = ColorFilter.mode(paint.color, blendMode!);
+      paint.color = paint.color.withOpacity(_opacityValue);
+
+      context.canvas.drawImageRect(image, src, dst, paint);
+    }
   }
 }
