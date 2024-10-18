@@ -19,5 +19,5 @@ enum DashType {
   final int value;
   const DashType(this.value);
 
-  static DashType from(int index) => DashType.values.firstWhere((e) => e.value == index);
+  static DashType from(int index) => DashType.values.firstWhere((e) => e.value == index, orElse: () => DashType.solid);
 }

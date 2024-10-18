@@ -12,10 +12,10 @@ class Circle extends Command {
   }
 
   @override
-  String toString() => 'Circle(center: $center, radius: $radius)';
+  void paint(CGMDisplay display) {
+    display.canvas.drawCircle(center, radius, display.edgePaint!);
+  }
 
   @override
-  void paint(CGMDisplay display) {
-    display.canvas.drawCircle(center, radius, display.fillPaint!);
-  }
+  String toString() => 'Circle(center: $center, radius: $radius)';
 }

@@ -422,8 +422,7 @@ class Command {
         return AppendText(elementClass, elementId, l, buffer, cgm);
 
       case GraphicalPrimitiveElement.polygon:
-        return _unipmlemented(buffer, elementClass, elementId, l, cgm);
-      // TODO: return Polygon(elementClass, elementId, l, buffer, cgm);
+        return Polygon(elementClass, elementId, l, buffer, cgm);
 
       case GraphicalPrimitiveElement.polygonSet:
         return _unipmlemented(buffer, elementClass, elementId, l, cgm);
@@ -437,8 +436,7 @@ class Command {
         return Command(elementClass, elementId, l, buffer, cgm);
 
       case GraphicalPrimitiveElement.rectangle:
-        return _unipmlemented(buffer, elementClass, elementId, l, cgm);
-      // TODO: return Rectangle(elementClass, elementId, l, buffer, cgm);
+        return Rectangle(elementClass, elementId, l, buffer, cgm);
 
       case GraphicalPrimitiveElement.circle:
         return Circle(elementClass, elementId, l, buffer, cgm);
@@ -450,12 +448,10 @@ class Command {
         return CircularArc3PointClose(elementClass, elementId, l, buffer, cgm);
 
       case GraphicalPrimitiveElement.circularArcCentre:
-        return _unipmlemented(buffer, elementClass, elementId, l, cgm);
-      // TODO: return CircularArcCentre(elementClass, elementId, l, buffer, cgm);
+        return CircularArcCenter(elementClass, elementId, l, buffer, cgm);
 
       case GraphicalPrimitiveElement.circularArcCentreClose:
-        return _unipmlemented(buffer, elementClass, elementId, l, cgm);
-      // TODO: return CircularArcCentreClose(elementClass, elementId, l, buffer, cgm);
+        return CircularArcCenterClose(elementClass, elementId, l, buffer, cgm);
 
       case GraphicalPrimitiveElement.ellipse:
         return Ellipse(elementClass, elementId, l, buffer, cgm);

@@ -42,6 +42,7 @@ class EllipticalArc extends Ellipse {
     Vector2 finalStartVector = startVector;
     Vector2 finalEndVector = endVector;
 
+    // TODO: Improve calculation of the clockwise flag
     bool clockwise = false;
     if (firstConjugateAngle > secondConjugateAngle) {
       if (firstConjugateAngle - secondConjugateAngle < pi) {

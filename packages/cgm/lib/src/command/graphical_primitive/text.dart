@@ -15,14 +15,14 @@ class Text extends TextCommand {
   Vector2 getTextOffset(CGMDisplay display) {
     return Vector2(
       0,
-      -display.characterHeight,
+      -display.characterHeight * 1.7,
     );
   }
 
   @override
   Vector2 scaleText(CGMDisplay display, LineMetrics lineMetrics) {
     final characterHeight = display.characterHeight;
-    return Vector2.all(characterHeight / lineMetrics.ascent * 1.1);
+    return Vector2.all(characterHeight / lineMetrics.height * 1.7);
   }
 
   @override
