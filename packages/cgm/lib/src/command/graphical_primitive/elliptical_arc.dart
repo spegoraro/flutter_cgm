@@ -34,10 +34,10 @@ class EllipticalArc extends Ellipse {
     final startVector = transform.transform3(Vector3(startVectorDeltaX, startVectorDeltaY, 0)).xy;
     final endVector = transform.transform3(Vector3(endVectorDeltaX, endVectorDeltaY, 0)).xy;
 
-    final double firstConjugateAngle =
-        angle(firstConjugateDiameterEndPoint.x - center.x, firstConjugateDiameterEndPoint.y - center.y);
-    final double secondConjugateAngle =
-        angle(secondConjugateDiameterEndPoint.x - center.x, secondConjugateDiameterEndPoint.y - center.y);
+    // final double firstConjugateAngle =
+    //     angle(firstConjugateDiameterEndPoint.x - center.x, firstConjugateDiameterEndPoint.y - center.y);
+    // final double secondConjugateAngle =
+    //     angle(secondConjugateDiameterEndPoint.x - center.x, secondConjugateDiameterEndPoint.y - center.y);
 
     // Vector2 finalStartVector = startVector;
     // Vector2 finalEndVector = endVector;
