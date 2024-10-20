@@ -16,7 +16,7 @@ abstract class TextCommand extends Command {
 
   TextCommand(super.ec, super.eid, super.l, super.buffer, super.cgm);
 
-  Vector2 getTextOffset(CGMDisplay display);
+  Vector2 getTextOffset(CGMDisplay display, LineMetrics lineMetrics);
 
   @protected
   Vector2 scaleText(CGMDisplay display, LineMetrics lineMetrics);
@@ -34,7 +34,7 @@ abstract class TextCommand extends Command {
 
     display.canvas.drawText(
       text,
-      offset: getTextOffset(display),
+      offset: getTextOffset(display, fontMetrics),
     );
 
     display.canvas.restore();

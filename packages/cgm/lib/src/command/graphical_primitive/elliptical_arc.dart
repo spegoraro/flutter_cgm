@@ -39,37 +39,39 @@ class EllipticalArc extends Ellipse {
     final double secondConjugateAngle =
         angle(secondConjugateDiameterEndPoint.x - center.x, secondConjugateDiameterEndPoint.y - center.y);
 
-    Vector2 finalStartVector = startVector;
-    Vector2 finalEndVector = endVector;
+    // Vector2 finalStartVector = startVector;
+    // Vector2 finalEndVector = endVector;
 
     // TODO: Improve calculation of the clockwise flag
-    bool clockwise = false;
-    if (firstConjugateAngle > secondConjugateAngle) {
-      if (firstConjugateAngle - secondConjugateAngle < pi) {
-        finalStartVector = startVector;
-        finalEndVector = endVector;
-      } else {
-        finalStartVector = endVector;
-        finalEndVector = startVector;
-        clockwise = true;
-      }
-    } else {
-      if (secondConjugateAngle - firstConjugateAngle < pi) {
-        finalStartVector = endVector;
-        finalEndVector = startVector;
-      } else {
-        finalStartVector = startVector;
-        finalEndVector = endVector;
-        clockwise = true;
-      }
-    }
+    // bool clockwise = false;
+    // if (firstConjugateAngle > secondConjugateAngle) {
+    // if (firstConjugateAngle - secondConjugateAngle < pi) {
+    //   finalStartVector = startVector;
+    //   finalEndVector = endVector;
+    // } else {
+    //   finalStartVector = endVector;
+    //   finalEndVector = startVector;
+    // clockwise = true;
+    // }
+    // } else {
+    // if (secondConjugateAngle - firstConjugateAngle < pi) {
+    //   finalStartVector = endVector;
+    //   finalEndVector = startVector;
+    // } else {
+    //   finalStartVector = startVector;
+    //   finalEndVector = endVector;
+    // clockwise = true;
+    // }
+    // }
+
+    // _clockwise = clockwise;
 
     shape = display.canvas.createPath()
-      ..moveTo(finalStartVector.x, finalStartVector.y)
+      ..moveTo(startVector.x, startVector.y)
       ..arcToPoint(
-        finalEndVector,
+        endVector,
         radius: shape!.getBounds() / 2,
-        clockwise: clockwise,
+        clockwise: true,
       );
   }
 

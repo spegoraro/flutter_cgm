@@ -12,10 +12,10 @@ class Text extends TextCommand {
   }
 
   @override
-  Vector2 getTextOffset(CGMDisplay display) {
+  Vector2 getTextOffset(CGMDisplay display, LineMetrics lineMetrics) {
     return Vector2(
       0,
-      -display.characterHeight * 1.7,
+      -display.characterHeight * 2,
     );
   }
 

@@ -10,7 +10,9 @@ import 'package:cgm/color.dart' as color;
 class FlutterCGMCanvas extends CGMCanvas {
   final Canvas canvas;
 
-  FlutterCGMCanvas(this.canvas);
+  final String? fontFamily;
+
+  FlutterCGMCanvas(this.canvas, {this.fontFamily});
 
   @override
   void clipPath(CGMPath path) => canvas.clipPath((path as FlutterCGMPath).getPath());
@@ -32,7 +34,10 @@ class FlutterCGMCanvas extends CGMCanvas {
   @override
   void drawText(String text, {required Vector2 offset, color.Color color = const color.Color(0xFF000000)}) {
     final builder = ParagraphBuilder(ParagraphStyle());
-    builder.pushStyle(TextStyle(color: Color(color.value)));
+    builder.pushStyle(TextStyle(
+      color: Color(color.value),
+      fontFamily: fontFamily,
+    ));
     builder.addText(text);
 
     final paragraph = builder.build();
