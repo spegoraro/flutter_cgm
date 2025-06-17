@@ -21,7 +21,11 @@ class CGMDisplay {
   late int _canvasWidth, _canvasHeight;
 
   Color? _fillColor, _edgeColor, _lineColor, textColor, _markerColor;
-  int _fillColorIndex = 1, _edgeColorIndex = 1, _lineColorIndex = 1, _textColorIndex = 1, _markerColorIndex = 1;
+  int _fillColorIndex = 1,
+      _edgeColorIndex = 1,
+      _lineColorIndex = 1,
+      _textColorIndex = 1,
+      _markerColorIndex = 1;
 
   double _lineWidth = 1;
   double _edgeWidth = 1;
@@ -34,7 +38,8 @@ class CGMDisplay {
   late List<Vector2> _extent;
 
   List<FontWrapper> _fonts = [];
-  HorizontalAlignment _horizontalTextAlignment = HorizontalAlignment.normalHorizontal;
+  HorizontalAlignment _horizontalTextAlignment =
+      HorizontalAlignment.normalHorizontal;
   VerticalAlignment _verticalTextAlignment = VerticalAlignment.normalVertical;
   @protected
   late final HashMap<int, List<double>> lineDashes;
@@ -78,8 +83,10 @@ class CGMDisplay {
 
   // TODO: TESTING TESTING 123
   BeginApplicationStructure? currentApplicationStructure;
-  HashMap<BeginApplicationStructure, CGMPaintHolder> _applicationStructureCGMPaintHolders = HashMap();
-  CGMPaintHolder? get currentCGMPaintHolder => _applicationStructureCGMPaintHolders[currentApplicationStructure];
+  HashMap<BeginApplicationStructure, CGMPaintHolder>
+      _applicationStructureCGMPaintHolders = HashMap();
+  CGMPaintHolder? get currentCGMPaintHolder =>
+      _applicationStructureCGMPaintHolders[currentApplicationStructure];
 
   CGMPaint? linePaint, fillPaint, edgePaint;
 
@@ -95,7 +102,8 @@ class CGMDisplay {
     lineDashes.putIfAbsent(DashType.dash.value, () => [55, 20]);
     lineDashes.putIfAbsent(DashType.dot.value, () => [13, 13]);
     lineDashes.putIfAbsent(DashType.dashDot.value, () => [55, 20, 13, 20]);
-    lineDashes.putIfAbsent(DashType.dashDotDot.value, () => [55, 20, 13, 20, 13, 20]);
+    lineDashes.putIfAbsent(
+        DashType.dashDotDot.value, () => [55, 20, 13, 20, 13, 20]);
 
     final vdcType = cgm.vdcType;
     _extent = switch (vdcType) {
@@ -167,8 +175,9 @@ class CGMDisplay {
 
   void newApplicationStructure(BeginApplicationStructure applicationStructure) {
     currentApplicationStructure = applicationStructure;
-    _applicationStructureCGMPaintHolders[applicationStructure] = CGMPaintHolder()
-      ..setApsId(applicationStructure.applicationStructureIdentifier);
+    _applicationStructureCGMPaintHolders[applicationStructure] =
+        CGMPaintHolder()
+          ..setApsId(applicationStructure.applicationStructureIdentifier);
   }
 
   void endApplicationStructure() {
@@ -241,7 +250,8 @@ class CGMDisplay {
 
     _markerType = MarkerTypeType.asterisk;
 
-    final markerSizeSpecificationMode = initial ? SpecificationMode.absolute : _cgm.markerSizeSpecificationMode;
+    final markerSizeSpecificationMode =
+        initial ? SpecificationMode.absolute : _cgm.markerSizeSpecificationMode;
     _markerSize = switch (markerSizeSpecificationMode) {
       SpecificationMode.absolute => 32767.0 / 100.0,
       SpecificationMode.scaled => 1.0,
@@ -297,7 +307,8 @@ class CGMDisplay {
   //-< Setters >-//
   void setInteriorStyle(InteriorStyleStyle style) {
     _interiorStyle = style;
-    _isFilled = style == InteriorStyleStyle.solid || style == InteriorStyleStyle.interpolated;
+    _isFilled = style == InteriorStyleStyle.solid ||
+        style == InteriorStyleStyle.interpolated;
   }
 
   void setTextAlignment(
@@ -336,14 +347,20 @@ class CGMDisplay {
     fillPaint?.strokeWidth = 0;
   }
 
-  void setCurrentFillColor(FillColor fillColor) => currentCGMPaintHolder?.setFillColor(fillColor);
-  void setCurrentEdgeColor(EdgeColor edgeColor) => currentCGMPaintHolder?.setEdgeColor(edgeColor);
-  void setCurrentEdgeWidth(EdgeWidth edgeWidth) => currentCGMPaintHolder?.setEdgeWidth(edgeWidth);
-  void setCurrentLineColor(LineColor lineColor) => currentCGMPaintHolder?.setLineColor(lineColor);
-  void setCurrentLineWidth(LineWidth lineWidth) => currentCGMPaintHolder?.setLineWidth(lineWidth);
+  void setCurrentFillColor(FillColor fillColor) =>
+      currentCGMPaintHolder?.setFillColor(fillColor);
+  void setCurrentEdgeColor(EdgeColor edgeColor) =>
+      currentCGMPaintHolder?.setEdgeColor(edgeColor);
+  void setCurrentEdgeWidth(EdgeWidth edgeWidth) =>
+      currentCGMPaintHolder?.setEdgeWidth(edgeWidth);
+  void setCurrentLineColor(LineColor lineColor) =>
+      currentCGMPaintHolder?.setLineColor(lineColor);
+  void setCurrentLineWidth(LineWidth lineWidth) =>
+      currentCGMPaintHolder?.setLineWidth(lineWidth);
 
   Color getIndexedColor(int index) {
-    assert(index >= 0 && index < _colorTable.length, 'getIndexedColor: Index out of bounds ($index)');
+    assert(index >= 0 && index < _colorTable.length,
+        'getIndexedColor: Index out of bounds ($index)');
     return _colorTable[index];
   }
 
@@ -371,7 +388,8 @@ class CGMDisplay {
     _hatchType = type;
   }
 
-  void setEdge({Color? color, int? index, double? width, StrokeJoin? strokeJoin}) {
+  void setEdge(
+      {Color? color, int? index, double? width, StrokeJoin? strokeJoin}) {
     if (color != null) {
       _edgeColor = color;
     } else if (index != null) {
@@ -391,7 +409,12 @@ class CGMDisplay {
     edgePaint?.strokeWidth = _edgeWidth;
   }
 
-  void setLine({Color? color, int? index, double? width, StrokeCap? strokeCap, StrokeJoin? strokeJoin}) {
+  void setLine(
+      {Color? color,
+      int? index,
+      double? width,
+      StrokeCap? strokeCap,
+      StrokeJoin? strokeJoin}) {
     if (color != null) {
       _lineColor = color;
     } else if (index != null) {
@@ -415,14 +438,17 @@ class CGMDisplay {
     linePaint?.strokeWidth = _lineWidth;
   }
 
-  void addLineType(int lineType, List<int> dashElements, double dashCycleRepeatLength) {
+  void addLineType(
+      int lineType, List<int> dashElements, double dashCycleRepeatLength) {
     lineDashes[lineType] = dashElements.map((e) => e.toDouble()).toList();
   }
 
-  void _initializeColorTable([int size = 63]) {
+  void _initializeColorTable([int size = 200]) {
     _colorTable = List.generate(
       size,
-      (index) => index == 0 ? const Color.fromARGB(255, 255, 255, 255) : const Color.fromARGB(255, 0, 0, 0),
+      (index) => index == 0
+          ? const Color.fromARGB(255, 255, 255, 255)
+          : const Color.fromARGB(255, 0, 0, 0),
     );
   }
 }
