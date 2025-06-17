@@ -1,8 +1,8 @@
 name: flutter_cgm
 description: "Library for displaying CGM files in Flutter"
-version: 0.0.4
-homepage:
-repository: https://github.com/insufficientFunding/flutter_cgm
+version: 0.0.5
+repository: https://github.com/spegoraro/flutter_cgm
+publish_to: none
 
 environment:
   sdk: ^3.5.3
@@ -12,7 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cgm: ^0.0.3
+  cgm:
+    path: ../cgm/
+    
   vector_math: ^2.1.4
 
 dev_dependencies:

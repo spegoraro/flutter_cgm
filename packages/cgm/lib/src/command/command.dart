@@ -105,25 +105,32 @@ class Command {
   }
 
   // TODO: remove this shit
-  static Command _unipmlemented(ByteDataReader buffer, int elementClass, int elementId, int l, CGM cgm) {
+  static Command _unipmlemented(
+      ByteDataReader buffer, int elementClass, int elementId, int l, CGM cgm) {
     final eClass = ElementClass.getElementClass(elementClass);
     final eId = switch (eClass) {
       ElementClass.delimiterElements => DelimiterElement.getElement(elementId),
-      ElementClass.metafileDescriptorElements => MetafileDescriptorElement.getElement(elementId),
-      ElementClass.pictureDescriptorElements => PictureDescriptorElement.getElement(elementId),
+      ElementClass.metafileDescriptorElements =>
+        MetafileDescriptorElement.getElement(elementId),
+      ElementClass.pictureDescriptorElements =>
+        PictureDescriptorElement.getElement(elementId),
       ElementClass.controlElements => ControlElement.getElement(elementId),
-      ElementClass.graphicalPrimitiveElements => GraphicalPrimitiveElement.getElement(elementId),
+      ElementClass.graphicalPrimitiveElements =>
+        GraphicalPrimitiveElement.getElement(elementId),
       ElementClass.attributeElements => AttributeElement.getElement(elementId),
-      ElementClass.applicationStructureElements => ApplicationStructureDescriptorElement.getElement(elementId),
+      ElementClass.applicationStructureElements =>
+        ApplicationStructureDescriptorElement.getElement(elementId),
       _ => null,
     };
 
     cgm.logger.warning('Unimplemented command: $eClass $eId');
-    return Command(elementClass, elementId, l, buffer, cgm)..elementName = eId?.name ?? 'Unknown';
+    return Command(elementClass, elementId, l, buffer, cgm)
+      ..elementName = eId?.name ?? 'Unknown';
   }
 
   //--< Read Command >--//
-  static Command readCommand(ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
+  static Command readCommand(
+      ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
     final element = ElementClass.getElementClass(elementClass);
 
     switch (element) {
@@ -131,16 +138,19 @@ class Command {
         return _readDelimiterElements(buffer, cgm, elementClass, elementId, l);
 
       case ElementClass.metafileDescriptorElements:
-        return _readMetafileDescriptorElements(buffer, cgm, elementClass, elementId, l);
+        return _readMetafileDescriptorElements(
+            buffer, cgm, elementClass, elementId, l);
 
       case ElementClass.pictureDescriptorElements:
-        return _readPictureDescriptorElements(buffer, cgm, elementClass, elementId, l);
+        return _readPictureDescriptorElements(
+            buffer, cgm, elementClass, elementId, l);
 
       case ElementClass.controlElements:
         return _readControlElements(buffer, cgm, elementClass, elementId, l);
 
       case ElementClass.graphicalPrimitiveElements:
-        return _readGraphicalPrimitiveElements(buffer, cgm, elementClass, elementId, l);
+        return _readGraphicalPrimitiveElements(
+            buffer, cgm, elementClass, elementId, l);
 
       case ElementClass.attributeElements:
         return _readAttributeElements(buffer, cgm, elementClass, elementId, l);
@@ -156,13 +166,16 @@ class Command {
         return Command(elementClass, elementId, l, buffer, cgm);
 
       case ElementClass.applicationStructureElements:
-        return _readApplicationStructureDescriptorElements(buffer, cgm, elementClass, elementId, l);
+        return _readApplicationStructureDescriptorElements(
+            buffer, cgm, elementClass, elementId, l);
     }
   }
 
   //--< Read Delimiter Elements >--//
-  static Command _readDelimiterElements(ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
-    final DelimiterElement delimiterElement = DelimiterElement.getElement(elementId);
+  static Command _readDelimiterElements(
+      ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
+    final DelimiterElement delimiterElement =
+        DelimiterElement.getElement(elementId);
     switch (delimiterElement) {
       case DelimiterElement.noOp:
         return NoOp(elementClass, elementId, l, buffer, cgm);
@@ -206,10 +219,12 @@ class Command {
         return EndTileArray(elementClass, elementId, l, buffer, cgm);
 
       case DelimiterElement.beginApplicationStructure:
-        return BeginApplicationStructure(elementClass, elementId, l, buffer, cgm);
+        return BeginApplicationStructure(
+            elementClass, elementId, l, buffer, cgm);
 
       case DelimiterElement.beginApplicationStructureBody:
-        return BeginApplicationStructureBody(elementClass, elementId, l, buffer, cgm);
+        return BeginApplicationStructureBody(
+            elementClass, elementId, l, buffer, cgm);
 
       case DelimiterElement.endApplicationStructure:
         return EndApplicationStructure(elementClass, elementId, l, buffer, cgm);
@@ -223,7 +238,8 @@ class Command {
   //--< Read Metafile Descriptor Elements >--//
   static Command _readMetafileDescriptorElements(
       ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
-    final MetafileDescriptorElement metafileDescriptorElement = MetafileDescriptorElement.getElement(elementId);
+    final MetafileDescriptorElement metafileDescriptorElement =
+        MetafileDescriptorElement.getElement(elementId);
     switch (metafileDescriptorElement) {
       case MetafileDescriptorElement.metafileVersion:
         return MetafileVersion(elementClass, elementId, l, buffer, cgm);
@@ -259,7 +275,8 @@ class Command {
         return MetafileElementList(elementClass, elementId, l, buffer, cgm);
 
       case MetafileDescriptorElement.metafileDefaultsReplacement:
-        return MetafileDefaultsReplacement(elementClass, elementId, l, buffer, cgm);
+        return MetafileDefaultsReplacement(
+            elementClass, elementId, l, buffer, cgm);
 
       case MetafileDescriptorElement.fontList:
         return FontList(elementClass, elementId, l, buffer, cgm);
@@ -268,7 +285,8 @@ class Command {
         return CharacterSetList(elementClass, elementId, l, buffer, cgm);
 
       case MetafileDescriptorElement.characterCodingAnnouncer:
-        return CharacterCodingAnnouncer(elementClass, elementId, l, buffer, cgm);
+        return CharacterCodingAnnouncer(
+            elementClass, elementId, l, buffer, cgm);
 
       case MetafileDescriptorElement.namePrecision:
         return NamePrecision(elementClass, elementId, l, buffer, cgm);
@@ -300,7 +318,8 @@ class Command {
   //--< Read Picture Descriptor Elements >--//
   static Command _readPictureDescriptorElements(
       ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
-    final PictureDescriptorElement pictureDescriptorElement = PictureDescriptorElement.getElement(elementId);
+    final PictureDescriptorElement pictureDescriptorElement =
+        PictureDescriptorElement.getElement(elementId);
     switch (pictureDescriptorElement) {
       case PictureDescriptorElement.scalingMode:
         return ScalingMode(elementClass, elementId, l, buffer, cgm);
@@ -309,13 +328,16 @@ class Command {
         return ColorSelectionMode(elementClass, elementId, l, buffer, cgm);
 
       case PictureDescriptorElement.lineWidthSpecificationMode:
-        return LineWidthSpecificationMode(elementClass, elementId, l, buffer, cgm);
+        return LineWidthSpecificationMode(
+            elementClass, elementId, l, buffer, cgm);
 
       case PictureDescriptorElement.markerSizeSpecificationMode:
-        return MarkerSizeSpecificationMode(elementClass, elementId, l, buffer, cgm);
+        return MarkerSizeSpecificationMode(
+            elementClass, elementId, l, buffer, cgm);
 
       case PictureDescriptorElement.edgeWidthSpecificationMode:
-        return EdgeWidthSpecificationMode(elementClass, elementId, l, buffer, cgm);
+        return EdgeWidthSpecificationMode(
+            elementClass, elementId, l, buffer, cgm);
 
       case PictureDescriptorElement.vdcExtent:
         return VDCExtent(elementClass, elementId, l, buffer, cgm);
@@ -328,7 +350,8 @@ class Command {
         return Command(elementClass, elementId, l, buffer, cgm);
 
       case PictureDescriptorElement.deviceViewportSpecificationMode:
-        return DeviceViewportSpecificationMode(elementClass, elementId, l, buffer, cgm);
+        return DeviceViewportSpecificationMode(
+            elementClass, elementId, l, buffer, cgm);
 
       case PictureDescriptorElement.deviceViewportMapping:
       case PictureDescriptorElement.lineRepresentation:
@@ -340,10 +363,12 @@ class Command {
         return Command(elementClass, elementId, l, buffer, cgm);
 
       case PictureDescriptorElement.interiorStyleSpecificationMode:
-        return InteriorStyleSpecificationMode(elementClass, elementId, l, buffer, cgm);
+        return InteriorStyleSpecificationMode(
+            elementClass, elementId, l, buffer, cgm);
 
       case PictureDescriptorElement.lineAndEdgeTypeDefinition:
-        return LineAndEdgeTypeDefinition(elementClass, elementId, l, buffer, cgm);
+        return LineAndEdgeTypeDefinition(
+            elementClass, elementId, l, buffer, cgm);
 
       case PictureDescriptorElement.hatchStyleDefinition:
       case PictureDescriptorElement.geometricPatternDefinition:
@@ -358,7 +383,8 @@ class Command {
   }
 
   //--< Read Control Elements >--//
-  static Command _readControlElements(ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
+  static Command _readControlElements(
+      ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
     final ControlElement controlElement = ControlElement.getElement(elementId);
     switch (controlElement) {
       case ControlElement.vdcIntegerPrecision:
@@ -398,7 +424,8 @@ class Command {
   //--< Read Graphical Primitive Elements >--//
   static Command _readGraphicalPrimitiveElements(
       ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
-    final GraphicalPrimitiveElement graphicalPrimitiveElement = GraphicalPrimitiveElement.getElement(elementId);
+    final GraphicalPrimitiveElement graphicalPrimitiveElement =
+        GraphicalPrimitiveElement.getElement(elementId);
     switch (graphicalPrimitiveElement) {
       case GraphicalPrimitiveElement.polyline:
         return Polyline(elementClass, elementId, l, buffer, cgm);
@@ -492,7 +519,8 @@ class Command {
   }
 
   //--< Read Attribute Elements >--//
-  static Command _readAttributeElements(ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
+  static Command _readAttributeElements(
+      ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
     switch (AttributeElement.getElement(elementId)) {
       case AttributeElement.lineBundleIndex: // 1
         unsupported(elementClass, elementId, cgm);
@@ -531,7 +559,8 @@ class Command {
         return TextPrecision(elementClass, elementId, l, buffer, cgm);
 
       case AttributeElement.characterExpansionFactor: // 12
-        return CharacterExpansionFactor(elementClass, elementId, l, buffer, cgm);
+        return CharacterExpansionFactor(
+            elementClass, elementId, l, buffer, cgm);
 
       case AttributeElement.characterSpacing: // 13
         return CharacterSpacing(elementClass, elementId, l, buffer, cgm);
@@ -555,7 +584,8 @@ class Command {
         return CharacterSetIndex(elementClass, elementId, l, buffer, cgm);
 
       case AttributeElement.alternateCharacterSetIndex: // 20
-        return AlternateCharacterSetIndex(elementClass, elementId, l, buffer, cgm);
+        return AlternateCharacterSetIndex(
+            elementClass, elementId, l, buffer, cgm);
 
       case AttributeElement.fillBundleIndex: // 21
         return Command(elementClass, elementId, l, buffer, cgm);
@@ -638,7 +668,8 @@ class Command {
   }
 
   //--< Read External Elements >--//
-  static Command _readExternalElements(ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
+  static Command _readExternalElements(
+      ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
     switch (ExternalElements.getElement(elementId)) {
       case ExternalElements.message:
         return Message(elementClass, elementId, l, buffer, cgm);
@@ -657,7 +688,8 @@ class Command {
       ByteDataReader buffer, CGM cgm, int elementClass, int elementId, int l) {
     switch (ApplicationStructureDescriptorElement.getElement(elementId)) {
       case ApplicationStructureDescriptorElement.applicationStructureAttribute:
-        return ApplicationStructureAttribute(elementClass, elementId, l, buffer, cgm);
+        return ApplicationStructureAttribute(
+            elementClass, elementId, l, buffer, cgm);
 
       default:
         unsupported(elementClass, elementId, cgm);
@@ -678,7 +710,8 @@ class Command {
       stringBuffer[i] = makeByte();
     }
 
-    return Encoding.getByName('ISO-8859-1')?.decode(stringBuffer) ?? stringBuffer.toString();
+    return Encoding.getByName('ISO-8859-1')?.decode(stringBuffer) ??
+        stringBuffer.toString();
   }
 
   int _getStringCount() {
@@ -729,7 +762,8 @@ class Command {
 
   int _makeSignedInt8() {
     _skipBits();
-    assert(currentArgument < arguments.length, 'currentArgument=$currentArgument arguments.length=${arguments.length}');
+    assert(currentArgument < arguments.length,
+        'currentArgument=$currentArgument arguments.length=${arguments.length}');
     return arguments[currentArgument++];
   }
 
@@ -742,7 +776,9 @@ class Command {
   int _makeSignedInt24() {
     _skipBits();
     assert(currentArgument + 2 < arguments.length);
-    return (arguments[currentArgument++] << 16) + (arguments[currentArgument++] << 8) + arguments[currentArgument++];
+    return (arguments[currentArgument++] << 16) +
+        (arguments[currentArgument++] << 8) +
+        arguments[currentArgument++];
   }
 
   int _makeSignedInt32() {
@@ -795,14 +831,17 @@ class Command {
       return arguments[currentArgument++];
     }
 
-    assert(false, 'currentArgument=$currentArgument arguments.length=${arguments.length}');
+    assert(false,
+        'currentArgument=$currentArgument arguments.length=${arguments.length}');
     return 0;
   }
 
   int _makeUnsignedInt24() {
     _skipBits();
     assert(currentArgument + 2 < arguments.length);
-    return (arguments[currentArgument++] << 16) + (arguments[currentArgument++] << 8) + arguments[currentArgument++];
+    return (arguments[currentArgument++] << 16) +
+        (arguments[currentArgument++] << 8) +
+        arguments[currentArgument++];
   }
 
   int _makeUnsignedInt32() {
@@ -983,7 +1022,8 @@ class Command {
 
   //-- Colour --//
   @protected
-  int makeColorIndex([int? precision]) => makeUInt(precision ?? cgm.colorIndexPrecision);
+  int makeColorIndex([int? precision]) =>
+      makeUInt(precision ?? cgm.colorIndexPrecision);
 
   @protected
   Color makeDirectColor() {
@@ -1014,7 +1054,8 @@ class Command {
       case ColorModelType.cielab:
       case ColorModelType.cieluv:
       case ColorModelType.rgbRelated:
-        Command.unimplemented(cgm, message: 'Unsupported color model: $colorModel');
+        Command.unimplemented(cgm,
+            message: 'Unsupported color model: $colorModel');
         makeUInt(precision);
         makeUInt(precision);
         makeUInt(precision);
@@ -1031,7 +1072,8 @@ class Command {
       return 3 * precision ~/ 8;
     }
 
-    assert(colorModel != ColorModelType.rgb, 'Unsupported color model: $colorModel');
+    assert(colorModel != ColorModelType.rgb,
+        'Unsupported color model: $colorModel');
     return 0;
   }
 
@@ -1132,9 +1174,6 @@ class Command {
           case StructuredDataType.ui16:
             data.add(_makeUnsignedInt16());
             break;
-          default:
-            Command.unimplemented(cgm, message: 'Unsupported data type: $dataType');
-            break;
         }
       }
       sdr.add(dataType, dataCount, data);
@@ -1186,18 +1225,23 @@ class Command {
   }
 
   @override
-  String toString() => 'Command(class: $_elementClass, id: $_elementId, arguments: $arguments, elementName:'
+  String toString() =>
+      'Command(class: $_elementClass, id: $_elementId, arguments: $arguments, elementName:'
       '$elementName)';
 
   static void unsupported(int elementClass, int elementId, CGM cgm) {
     // 0,0 is NO-OP
     if (elementClass == 0 && elementId == 0) return;
 
-    cgm.logger.warning('Unsupported element: class: $elementClass, id: $elementId');
+    cgm.logger
+        .warning('Unsupported element: class: $elementClass, id: $elementId');
   }
 
-  static void unimplemented(CGM cgm, {String? message, int? elementClass, int? elementId}) {
-    final String element = elementClass != null && elementId != null ? 'class: $elementClass, id: $elementId' : '';
+  static void unimplemented(CGM cgm,
+      {String? message, int? elementClass, int? elementId}) {
+    final String element = elementClass != null && elementId != null
+        ? 'class: $elementClass, id: $elementId'
+        : '';
     cgm.logger.warning('Unimplemented element: $element $message');
   }
 }
